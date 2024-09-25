@@ -7,14 +7,22 @@ const balisePseudo = window.document.getElementById('pseudo')
 
 baliseForm.addEventListener('submit', (event) => {
     event.preventDefault();
-    const message = balisePseudo.value;
+    const message = balisePseudo.value.trim();
     console.log(message);
     socket.emit('identifier',message);
 });
 
 
-socket.on("pseudoExisteDeja", (data) => {
+socket.on("histoireDePseudo", (data) => {
     let p = document.createElement("p");
     p.innerHTML = data;
-    document.baliseForm.appendChild(p);
+    baliseForm.appendChild(p);
 });
+
+socket.on("mise-en-attente", (data) => {
+    let p = document.createElement("p");
+    p.setAttribute("id", "attente");
+    p.innerHTML = data;
+    baliseForm.appendChild(p);
+})
+

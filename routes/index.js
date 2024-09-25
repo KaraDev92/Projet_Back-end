@@ -1,21 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient } = require("mongodb");
 require('dotenv').config();
 const {phrasesJeu} = require('../variables.js');
 
 const uri = process.env.MONGODB_CONNECTION_STRING;
 
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
 
 async function chercherLeaderboard() {
+  const client = new MongoClient(uri);
   try {
+    
     const database = client.db('projet_back-end');
     const joueurs = database.collection('chifoumi');
     const options = { projection: { _id: 0, pseudo: 1, score:1} };
