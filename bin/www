@@ -1,0 +1,176 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+const app = require('../app');
+const debug = require('debug')('chifoumi:server');
+const http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+const server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+const httpServer = server.listen(port, () => {
+  console.log("serveur démarré sur le port: ", port);
+});
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  let port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  let bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+};
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  const addr = server.address();
+  const bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+};
+
+/** Serveur websocket */
+const { MongoClient, ServerApiVersion } = require("mongodb");
+require('dotenv').config();
+const { phrasesJeu, reglesJeu } = require('../variables.js');
+const ioServer = require("socket.io")(httpServer);
+
+const uri = process.env.MONGODB_CONNECTION_STRING;
+
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+
+// fonction pour vérifier conformité du pseudo
+function conformitePseudo(data) {
+  const regex = /[a-z A-Z 0-9]+/g;
+  return regex.test(data)
+};
+
+// fonction connection et recherche joueur existant dans la base Atlas
+async function chercherJoueur(nom) {
+  try {
+    const database = client.db('projet_back-end');
+    const joueurs = database.collection('chifoumi');
+    const options = { projection: { _id: 0, pseudo: 1}};
+    const cursor = await joueurs.findOne({pseudo : nom}, options);
+    console.log("joueur trouvé :", cursor);
+    if (!cursor) {
+      if (conformitePseudo(data)) {
+        joueurs.insertOne({pseudo: nom, score: 0});
+        return false
+      } else {
+
+      }
+    }
+    return true
+  } catch (error){
+    console.dir(error);
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+};
+
+
+
+
+ioServer.on('connection', (socket) => {
+
+
+
+
+
+  console.log("Un client s'est connecté");
+
+  socket.on("identifier", (data) => {
+  	console.log(data);
+    
+    const answer = chercherJoueur(data);
+    if (answer) {
+      socket.emit("pseudoExisteDeja", "Ce pseudo est déjà pris !");
+    } else {
+      
+    }
+
+  });
+
+  socket.emit("event2", "Message envoyé du serveur vers le client");
+
+  socket.join('le groupe');
+  ioServer.to('le groupe').emit('un identifiant', 'un message');
+
+
+socket.on('disconnect', () => {
+  console.log("un client s'est déconnecté");
+});
+
+
+});

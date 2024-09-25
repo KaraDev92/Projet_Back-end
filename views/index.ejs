@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='/stylesheets/styles.css' />
+    <title>Chifoumi</title>
+</head>
+<body>
+    <header>
+        <img src="./images/rock-paper-scissors.png" alt="logo" >
+        <h1><span>P</span>ierre <span>P</span>apier <span>C</span>iseaux <span>L</span>ézard <span>S</span>pock</h1>
+    </header>
+    <nav>
+        <a href="/accueil">ACCUEIL</a>
+        <a href="/jouer">JOUER</a>
+    </nav>
+    <main>
+        <h2>Histoire du Chifoumi ou Pierre-Papier-Ciseaux</h2>
+        <p>Du japonais hi, fu, mi (« un, deux, trois »), c'est un jeu de main à 3 positions inventé en Chine vers la fin de la période Ming. Ce n'est qu'au XVIIe siècle, que les gestes deviennent pierre-feuille-ciseaux au Japon.</p>
+        <p>Le jeu n'arrivera en Occident qu'au contact avec l'Asie au XIXe siècle.</p>
+        <p>Les théoriciens du pierre-feuille-ciseaux estiment que les meilleurs joueurs sont ceux qui, plutôt que de chercher à percer la logique de leur adversaire, restent suffisamment concentrés pour enlever toute apparence logique à leurs choix et se rapprocher du hasard.</p>
+        <p>De nombreuse variantes ont été créées dont celle rajoutant un lézard et Spock (personnage de Star Treck&reg;) par Sam Kass et Karen Bryla.</p>
+        <h2>Règles du jeu</h2>
+        <p>Chaque joueur choisit un mouvement en même temps et on compte les points :</p>
+        <ul>
+            <% for (const regle in regles) { %>
+                <li><%=regles[regle];%></li>
+            <%};%>
+        </ul>
+        <table id="encadre">
+            <caption>Leaderboard</caption>
+            <%if(listeGagnants) { %>
+                <% let i = 1; %>
+                <% listeGagnants.forEach( (gagnant) => {%>
+                    <tr><td><%=i%></td><td><%=gagnant.pseudo%></td><td><%=gagnant.score%></td></tr>
+                    <%i++%>
+                <% }); %>
+            <% } %>
+        </table>
+
+    </main>
+    <footer>
+        <p>Site réalisé par KaraDev 92</p>
+        <p>Sources des images</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,193 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Bhaina+2:wght@400..800&family=Marhey:wght@300..700&display=swap');
+
+* {
+    margin:0;
+    padding: 0;
+}
+
+/* variables de style */
+:root {
+    --fond: #461959;
+    --banniere:#7A316F;
+    --txt-voyant: #AED8CC;
+    --txt: black;
+    --fond-grille: #CD6688;
+}
+/* option 2
+:root {
+    --fond: #180161;
+    --banniere:#4F1787;
+    --txt-voyant: #FB773C;
+    --txt: black;
+    --fond-grille: #EB3678;
+}
+*/
+body {
+    font-family: "Baloo Bhaina 2", sans-serif;
+    background-color: var(--fond);
+    color: var(--txt-voyant);
+    font-size: 18px;
+}
+header {
+    font-family: 'Marhey', sans-serif;
+    background-color: var(--banniere);
+    color: var(--txt-voyant);
+    display: inline-flex;
+    justify-content: flex-start;
+    font-size: 2rem;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+header img {
+    height:10%;    
+
+}
+h1 {
+    flex-wrap: wrap;
+}
+span {
+    color: var(--fond-grille);
+}
+nav {
+    font-family: 'Marhey', sans-serif;
+    background-color: var(--fond-grille);
+    display: flex;
+    justify-content: space-around;
+    height: 2.2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+nav a {
+    text-decoration: none;
+    color: var(--fond);
+    margin: 0 0.5rem;
+    padding: 0 1rem;
+}
+nav a:hover {
+    background-color: var(--txt-voyant);
+}
+main {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem;
+}
+main p, main ul {
+    line-height: 130%;
+}
+ul li {
+    margin-left: 1.2rem;
+}
+ul li::marker { color: var(--fond-grille)}
+
+caption {
+    font-size: 1.7rem;
+    margin-top: 1rem;
+}
+td { 
+    border: 1px solid black; 
+    padding: 0 0.8rem;
+}
+
+table { 
+    border-collapse: collapse; 
+    margin: auto;
+}
+
+#encadre {
+    border: 2px dashed var(--txt);
+    /*border-image: url("../images/cadre1.png") 30 repeat;*/
+    border-image: repeating-linear-gradient(30deg, #4d9f0c, #9198e5, #4d9f0c 20px) 60;
+}
+
+footer {
+    font-family: "Baloo Bhaina 2", sans-serif;
+    background-color: var(--banniere);
+    color: var(--txt-voyant);
+}
+
+section {
+    display: flex;
+    flex-direction:row;
+}
+.identification {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap ;
+    width: 24%;
+}
+.joueur1, .joueur2 {
+    display: flex;
+    flex-direction: column;
+    width: 24%;
+}
+.joueur2 {
+    padding-left: 1%;
+}
+#pseudo {
+    background-color: var(--txt-voyant) ;
+    color: var(--txt);
+    width: auto;
+    height: min-content;
+
+}
+
+#conteneur { 
+    display: grid; 
+    grid-template-columns: 5rem 5rem;
+    grid-template-rows: 5rem 5rem 5rem;
+    gap: 0.1rem;
+}
+
+.lezard {
+    grid-column: 1/2;
+    grid-row: 1/2;
+    background-image: url("../images/lezard.png");
+    background-size:contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.papier {
+    grid-column: 2/3;
+    grid-row: 1/2;
+    background-image: url("../images/papier.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.ciseaux {
+    grid-column: 1/2;
+    grid-row: 2/3;
+    background-image: url("../images/ciseaux.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.pierre {
+    grid-column: 2/3;
+    grid-row: 2/3;
+    background-image: url("../images/pierre.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.spock {
+    grid-column: 1/3;
+    grid-row: 3/4;
+    background-image: url("../images/spock.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.lezard:hover, .spock:hover, .ciseaux:hover, .papier:hover, .pierre:hover {
+    border: 0.15rem solid var(--fond-grille);
+    border-radius: 0.4rem;
+}
+
+#plateau {
+    width: 50%;
+    height : 20rem;
+    background: linear-gradient(to bottom right, var(--fond-grille), var(--banniere));
+    border-image: url("../images/cadre2.png") 30 repeat;
+    border: 2px dashed var(--txt);
+}
