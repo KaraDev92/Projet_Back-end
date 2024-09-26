@@ -17,33 +17,43 @@
     </nav>
     <main>
         <section >
-            <div class="champsJoueur1">
-                <div class="identification"></div>
-                    <form id="formulaire">
-                        <label for="pseudo">Saisir votre pseudo : </label>
-                        <input type="text" name="pseudo" id="pseudo" maxlenght="20" minlength="4"><br>
-                        <input type="submit" value="Envoyer">
-                    </form>
-                </div>
-                <div class="joueur1">
-                    <p><span>&spades;</span> </p>
-                    <p>Score : </p>
-                    <p>Durée du jeu : </p>
-                    <div id="conteneur">
-                        <div class="lezard"></div>
-                        <div class="pierre"></div>
-                        <div class="ciseaux"></div>
-                        <div class="papier"></div>
-                        <div class="spock"></div>
-                        
-                    </div>
+            <div class="identification">
+                <form id="formulaire">
+                    <label for="pseudo">Saisir votre pseudo : </label>
+                    <input type="text" name="pseudo" id="pseudo" maxlenght="20" minlength="4"><br>
+                    <input type="submit" value="Envoyer">
+                </form>
+            </div>
+        
+            <div class="joueur1">
+                <p id="idJoueur1">&spades; <span></span></p>
+                <p id="scoreJoueur1">Score : <span></span></p>
+                <p id="dureeJeu1">Durée du jeu : <span></span> min</p>
+                <div id="conteneur1">
+                    <div id="lezard" class="lezard"></div>
+                    <div id="pierre" class="pierre"></div>
+                    <div id="ciseaux" class="ciseaux"></div>
+                    <div id="papier" class="papier"></div>
+                    <div id="spock" class="spock"></div>
                 </div>
             </div>
-            <div id="plateau"></div>
+
+            <div id="plateau">
+                <div id="espaceJoueur1"></div>
+                <div id="espaceJoueur2"></div>
+            </div>
+
             <div class="joueur2">
-                <p><span>&clubs;</span> </p>
-                <p>Score : </p>
-                <p>Durée du jeu : </p>
+                <div id="conteneur2">
+                    <div id="lezard" class="lezard"></div>
+                    <div id="pierre" class="pierre"></div>
+                    <div id="ciseaux" class="ciseaux"></div>
+                    <div id="papier" class="papier"></div>
+                    <div id="spock" class="spock"></div>
+                </div>
+                <p id="idJoueur2">&clubs; <span></span></p>
+                <p id="scoreJoueur2">Score : <span></span></p>
+                <p id="dureeJeu2">Durée du jeu : <span></span> min</p>
             </div>
         </section>
 

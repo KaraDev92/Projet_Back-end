@@ -7,14 +7,14 @@
 }
 
 /* variables de style */
-:root {
+/* :root {
     --fond: #461959;
     --banniere:#7A316F;
     --txt-voyant: #AED8CC;
     --txt: black;
     --fond-grille: #CD6688;
-}
-/* option 2
+} */
+
 :root {
     --fond: #180161;
     --banniere:#4F1787;
@@ -22,7 +22,7 @@
     --txt: black;
     --fond-grille: #EB3678;
 }
-*/
+
 body {
     font-family: "Baloo Bhaina 2", sans-serif;
     background-color: var(--fond);
@@ -33,11 +33,12 @@ header {
     font-family: 'Marhey', sans-serif;
     background-color: var(--banniere);
     color: var(--txt-voyant);
-    display: inline-flex;
+    display: flex;
     justify-content: flex-start;
     font-size: 2rem;
-    flex-wrap: wrap;
-    align-content: flex-start;
+    flex-wrap: nowrap;
+    align-content: center;
+    width: 100%;
 }
 header img {
     height:10%;    
@@ -117,12 +118,13 @@ section {
     width: 24%;
 }
 .joueur1, .joueur2 {
-    display: flex;
+    display: none;
     flex-direction: column;
     width: 24%;
 }
 .joueur2 {
     padding-left: 1%;
+    padding-top: 5%;
 }
 #pseudo {
     background-color: var(--txt-voyant) ;
@@ -132,56 +134,62 @@ section {
 
 }
 
-#conteneur { 
-    display: grid; 
+#conteneur1,
+#conteneur2 { 
+    display: none; 
     grid-template-columns: 5rem 5rem;
     grid-template-rows: 5rem 5rem 5rem;
     gap: 0.1rem;
 }
 
-.lezard {
+.lezard {background-image: url("../images/lezard.png");}
+#lezard {
     grid-column: 1/2;
     grid-row: 1/2;
-    background-image: url("../images/lezard.png");
     background-size:contain;
     background-repeat: no-repeat;
     background-position: center;
 }
-.papier {
+.papier {background-image: url("../images/papier.png");}
+#papier {
     grid-column: 2/3;
     grid-row: 1/2;
-    background-image: url("../images/papier.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
-.ciseaux {
+.ciseaux {background-image: url("../images/ciseaux.png");}
+#ciseaux {
     grid-column: 1/2;
     grid-row: 2/3;
-    background-image: url("../images/ciseaux.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
-.pierre {
+.pierre {background-image: url("../images/pierre.png");}
+#pierre {
     grid-column: 2/3;
     grid-row: 2/3;
-    background-image: url("../images/pierre.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
-.spock {
+.spock {background-image: url("../images/spock.png");}
+#spock {
     grid-column: 1/3;
     grid-row: 3/4;
-    background-image: url("../images/spock.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
-.lezard:hover, .spock:hover, .ciseaux:hover, .papier:hover, .pierre:hover {
+#lezard:hover, 
+#spock:hover, 
+#ciseaux:hover, 
+#papier:hover, 
+#pierre:hover {
     border: 0.15rem solid var(--fond-grille);
     border-radius: 0.4rem;
+
 }
 
 #plateau {
@@ -190,4 +198,28 @@ section {
     background: linear-gradient(to bottom right, var(--fond-grille), var(--banniere));
     border-image: url("../images/cadre2.png") 30 repeat;
     border: 2px dashed var(--txt);
+    position: relative;
+    z-index: 2;
+}
+#espaceJoueur1 {
+    position: absolute;
+    z-index: 5;
+    top: 1rem;
+    left:1rem;
+    width: 30%;
+    height: 45%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+#espaceJoueur2{
+    position:absolute;
+    z-index: 5;
+    right: 1rem;
+    bottom: 1rem;
+    width: 30%;
+    height: 45%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }

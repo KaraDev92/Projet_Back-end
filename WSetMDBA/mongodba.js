@@ -3,14 +3,16 @@
 const { MongoClient } = require("mongodb");
 require('dotenv').config();
 const uri = process.env.MONGODB_CONNECTION_STRING;
-
+const client = new MongoClient(uri);
 
 // fonction connection et recherche joueur existant dans la base Atlas
 const chercherJoueur = async function (nom) {
 
-    const client = new MongoClient(uri); 
+    //const client = new MongoClient(uri); 
     //la connexion se fait à la création de la variable donc besoin de la mettre dans la fonction c'est à dire quand on utilise vraiment la connection
+    
     try {
+        await client.connect();
         const database = client.db('projet_back-end');
         const joueurs = database.collection('chifoumi');
         const options = { projection: { _id: 0, pseudo: 1}};
@@ -32,9 +34,10 @@ const chercherJoueur = async function (nom) {
 
 
 const purgerBDDdesZero = async function() {
-    const client = new MongoClient(uri); 
+   // const client = new MongoClient(uri); 
     //la connexion se fait à la création de la variable donc besoin de la mettre dans la fonction c'est à dire quand on utilise vraiment la connection
     try {
+        await client.connect();
         const database = client.db('projet_back-end');
         const joueurs = database.collection('chifoumi');
         await joueurs.deleteMany({score : 0});
@@ -47,5 +50,21 @@ const purgerBDDdesZero = async function() {
     }
 }
 
+const enregistrerScore = async function (pseudo, score) {
+    try {
+        await client.connect();
+        const database = client.db('projet_back-end');
+        const joueurs = database.collection('chifoumi');
+        joueurs.updateOne({pseudo: pseudo}, {$set: {score: score}}, {upsert : true});
+    } catch (error){
+        console.dir(error);
+    } finally {
+        // Ensures that the client will close when you finish/error
+        await client.close();
+    }
+};
+
+
 module.exports = chercherJoueur;
 module.exports = purgerBDDdesZero;
+module.exports = enregistrerScore;
