@@ -111,18 +111,21 @@ section {
     display: flex;
     flex-direction:row;
 }
-.identification {
+#identification {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap ;
     width: 24%;
 }
-.joueur1, .joueur2 {
+#joueur1, #joueur2 {
     display: none;
     flex-direction: column;
     width: 24%;
+    justify-content: flex-start;
+    font-size: 1.1rem;
+    flex-wrap: nowrap;
 }
-.joueur2 {
+#joueur2 {
     padding-left: 1%;
     padding-top: 5%;
 }
@@ -212,7 +215,7 @@ section {
     background-repeat: no-repeat;
     background-position: center;
 }
-#espaceJoueur2{
+#espaceJoueur2 {
     position:absolute;
     z-index: 5;
     right: 1rem;
@@ -222,4 +225,11 @@ section {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+#espace-message {
+    justify-content: flex-start;
+    font-weight: 500;
+    flex-wrap: nowrap;
+
 }

@@ -24,7 +24,7 @@ const server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces and ask to clean up the leaderboard of the 0.
  */
-const purgerBDDdesZero = require('../WSetMDBA/mongodba.js');
+const {purgerBDDdesZero} = require('../WSetMDBA/mongodba.js');
 
 const httpServer = server.listen(port, () => {
   console.log("serveur démarré sur le port: ", port);

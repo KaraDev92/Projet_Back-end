@@ -11,10 +11,11 @@ let baliseConteneurChoixJoueur = null;
 let baliseEspaceJoueur = null;
 let baliseEspaceAdversaire = null;
 //const baliseEspaceJoueur2 = window.document.getElementById('espaceJoueur2');
-const baliseScoreJouer1 = document.querySelector("scoreJoueur1 span");
-const baliseScoreJouer2 = document.querySelector("scoreJoueur2 span");
+const baliseScoreJoueur1 = document.querySelector("#scoreJoueur1 span");
+const baliseScoreJoueur2 = document.querySelector("#scoreJoueur2 span");
+const baliseMessage = document.getElementById('espace-message');
 
-const partie = {};
+let partie = {};
 let joueur = "";
 let coupJoue = "";
 
@@ -40,60 +41,101 @@ socket.on("mise-en-attente", (data) => {
     baliseForm.appendChild(p);
 });
 
+socket.on("demande-info-partieA", (data) => {
+    socket.emit("demande-info-partieR", data);
+});
+
+socket.on("retour-info-partieA", (data) => {
+    socket.emit("retour-info-partieR", data);
+});
+
+
 socket.on("debut-partie", (data) => {
-    baliseForm.setAttribute("display", "none");
+    document.querySelector("#identification").style.display = "none";
     partie = data;
     if (socket.id === partie.player1.id) {
-        joueur = player1;
+        joueur = "player1";
+        console.log('sur les balises joueur 1');
         baliseJoueur = document.getElementById("joueur1");
         baliseAdversaire = document.getElementById("joueur2");
         baliseEspaceJoueur = document.getElementById('espaceJoueur1');
         baliseEspaceAdversaire = document.getElementById('espaceJoueur2');
         baliseConteneurChoixJoueur = document.getElementById('conteneur1');
-        document.querySelector("idJoueur1 span").textContent = partie.player1.pseudo;
-        document.querySelector("idJoueur2 span").textContent = partie.player2.pseudo;
-
+        baliseConteneurChoixJoueur.addEventListener('click', (event) => {
+            coupJoue = event.target.id;
+            console.log(`choix ${joueur} `,coupJoue);
+            socket.emit("choix-du-joueur", {joueur: joueur, coupJoue: coupJoue});
+            baliseEspaceJoueur.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
+            baliseEspaceJoueur.classList.add(coupJoue);
+        });
     } else {
-        joueur = player2;
+        joueur = "player2"; 
+        console.log('sur les balises joueur 2');
         baliseJoueur = document.getElementById("joueur2");
         baliseAdversaire = document.getElementById("joueur1");
         baliseEspaceJoueur = document.getElementById('espaceJoueur2');
         baliseEspaceAdversaire = document.getElementById('espaceJoueur1');
         baliseConteneurChoixJoueur = document.getElementById('conteneur2');
-        baliseScoreJoueur1.textContent = 0;
-        baliseScoreJoueur2.textContent = 0;
+        baliseConteneurChoixJoueur.addEventListener('click', (event) => {
+            coupJoue = event.target.id;
+            console.log(`choix ${joueur} `,coupJoue);
+            socket.emit("choix-du-joueur", {joueur: joueur, coupJoue: coupJoue});
+            baliseEspaceJoueur.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
+            baliseEspaceJoueur.classList.add(coupJoue);
+        });
     }
-    document.querySelector("idJoueur1 span").textContent = partie.player1.pseudo;
-    document.querySelector("idJoueur2 span").textContent = partie.player2.pseudo;
+    baliseMessage.innerText = "À vous de jouer !";
+    baliseJoueur.style.display = "flex";
+    baliseAdversaire.style.display = "flex";
+    baliseConteneurChoixJoueur.style.display = "grid";
+    document.querySelector("#idJoueur1 span").textContent = partie.player1.pseudo;
+    document.querySelector("#idJoueur2 span").textContent = partie.player2.pseudo;
     baliseScoreJoueur1.textContent = partie.player1.score;
     baliseScoreJoueur2.textContent = partie.player2.score;
-    baliseJoueur.setAttribute("display", "flex");
-    baliseAdversaire.setAttribute("display", "flex");
-    baliseConteneurChoixJoueur.setAttribute("display", "flex");
     //
 });
 
-baliseConteneurChoixJoueur.addEventListener('click', (event) => {
-    coupJoue = event.target.id;
-    console.log(`choix${joueur} `,coupJoue);
-    socket.emit(`choix${joueur}`,coupJoue);
-    baliseEspaceJoueur.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
-    baliseEspaceJoueur.classList.add(coupJoue);
+// baliseConteneurChoixJoueur.addEventListener('click', (event) => {
+//     coupJoue = event.target.id;
+//     console.log(`choix ${joueur} `,coupJoue);
+//     socket.emit("choix du joueur", {joueur: joueur, coupeJoue: coupJoue});
+//     baliseEspaceJoueur.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
+//     baliseEspaceJoueur.classList.add(coupJoue);
+// });
+
+// socket.on("affiche-choixJoueur2", (data) => {
+//     baliseEspaceJoueur2.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
+//     baliseEspaceJoueur2.classList.add(data);
+// });
+socket.on("l'autre-a-jouéA", (data) => {
+    socket.emit("l'autre-a-jouéA", data);
 });
 
-socket.on("affiche-choixJoueur2", (data) => {
-    baliseEspaceJoueur2.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
-    baliseEspaceJoueur2.classList.add(data);
+socket.on("Ont-joue", (data) => {
+    partie = data;
+    baliseMessage.innerText = "Les jeux sont faits !"
+    if (joueur = "player1") {
+        baliseEspaceAdversaire.classList.add(partie.player2.coup);
+    } else {
+        baliseEspaceAdversaire.classList.add(partie.player1.coup);
+    }
 });
 
-
+socket.on("And-the-winner-is", (data) => {
+    partie = data.partie;
+    baliseScoreJoueur1.innerText = partie.player1.score;
+    baliseScoreJoueur2.innerText = partie.player2.score;
+    baliseMessage.innerText = data.message;
+    //baliseEspaceAdversaire.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
+    //baliseEspaceJoueur.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
+})
 
 
 
 socket.on("reset", (message) => {
-    baliseJoueur.setAttribute("display", "none");
-    baliseAdversaire.setAttribute("display", "nonex");
-    baliseConteneurChoixJoueur.setAttribute("display", "none");
+    baliseJoueur.style.display = none;
+    baliseAdversaire.style.display = none;
+    baliseConteneurChoixJoueur.style.display = none;
     //afficher message
 })
 

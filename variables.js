@@ -44,6 +44,7 @@ const reglesJeu = {
             "lezard": [0, phrasesJeu["lezard-spock"]],
             "spock": ["E", phrasesJeu["identique"]]
     }
-}
+};
 
-module.exports = {reglesJeu, phrasesJeu}
+module.exports.reglesJeu = reglesJeu;
+module.exports.phrasesJeu = phrasesJeu;
