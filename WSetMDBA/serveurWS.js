@@ -1,16 +1,16 @@
 
-"use strict"
 
-const { phrasesJeu, reglesJeu } = require('../variables.js');
 const {chercherJoueur, enregistrerScore} = require('./mongodba.js');
 const {Partie, quiAgagne } = require('./logique_jeu.js');
+const { Server } = require("socket.io");
 
-const tabDesRooms = [];
+const tabDesRooms = new Array;
 
-const connectionWS = function (httpServer) {
+const connectionWS = async function (httpServer) {
 
         /** Serveur websocket */
-    const ioServer = require("socket.io")(httpServer);
+    const ioServer = new Server(httpServer); 
+   
 
     // fonction pour vérifier conformité du pseudo
     function conformitePseudo(data) {
@@ -27,7 +27,7 @@ const connectionWS = function (httpServer) {
             if (partie.player1.coup && partie.player2.coup) {
                 ioServer.to(partie.room).emit("Ont-joue", partie);
                 const resultat = quiAgagne(partie);
-                console.log("résultat qui Agagné 1"); 
+                console.log("résultat quiAgagné 1"); 
                 clearInterval(idDuSI);
                 resolve(resultat);
             }
@@ -67,12 +67,13 @@ const connectionWS = function (httpServer) {
                     } else {
                         const refRoom = tabDesRooms[indexRoomJeu];
                         refRoom.push(socket.id);
+                        console.log("refroom :" , refRoom);
                         const laRoom =  "room" + indexRoomJeu;
                         socket.join(laRoom);
                         console.log(data, " a rejoint la ", laRoom);
-                        socket.to(refRoom[0]).emit("demande-info-partieA", {pseudo : data, id : socket.id});
+                        ioServer.to(refRoom[0]).emit("demande-info-partie-a-player1", {pseudo : data, id : socket.id});
                     }
-                    console.log(tabDesRooms);
+                    console.log("tableau des rooms :", tabDesRooms);
                 }
             } else {
             socket.emit("histoireDePseudo", "Le pseudo ne doit contenir que des lettres (non accentuées) et/ou des chiffres.");
@@ -80,99 +81,127 @@ const connectionWS = function (httpServer) {
 
         });
 
-        socket.on("demande-info-partieR", (infoJoueur2) => {
-            console.log("demande-info-partie reçue");
-            partie.player2.id = infoJoueur2.id;
-            partie.player2.pseudo = infoJoueur2.pseudo;
-            console.log("partie avant renvoi au player2", partie);
-            ioServer.to(partie.room).emit("retour-info-partieA", partie);
+        socket.on("demande-info-partie-a-player1", (infoJoueur2) => {
+            console.log("demande-info-partie-a-player1 reçue");
+            if (socket.id = partie.player1.id) {
+                console.log("demande-info-partie reçue");
+                partie.player2.id = infoJoueur2.id;
+                partie.player2.pseudo = infoJoueur2.pseudo;
+                console.log("partie avant renvoi au player2", partie);
+                ioServer.to(partie.room).emit("retour-info-partie-a-player2", partie);
+            }
         });
 
-        socket.on("retour-info-partieR", (laPartie) => {
+        socket.on("retour-info-partie-a-player2", (laPartie) => {
+            if (socket.id = partie.player2.id) {
             partie = laPartie;
             ioServer.to(partie.room).emit("debut-partie", partie); // à compléter
-        });
-
-        socket.on("l'autre-a-jouéR", (data) => {
-            partie[data.joueur]["coup"] = data.coupJoue;
-        });
-
-        socket.on("choix-du-joueur", async (data) => {
-            if (data.joueur = "player1") {
-                socket.to(partie.player2.id).emit("l'autre-a-jouéA", data);
-            } else {
-                socket.to(partie.player1.id).emit("l'autre-a-jouéA", data);
             }
-            partie[data.joueur]["coup"] = data.coupJoue;
+        });
+
+        // socket.on("l'autre-a-jouéR", (data) => {
+        //     partie[data.joueur]["coup"] = data.coupJoue;
+        // });
+
+        socket.on("choix-du-player2", (coupP2) => {
+            partie.player2.coup = coupP2;
+            ioServer.to(partie.player1.id).emit("player2-a-joue", coupP2);
+        });
+
+        socket.on("player2-a-joue", (coupP2) => {
+            if (socket.id === partie.player1.id) {
+                partie.player2.coup = coupP2;
+            }
+        });
+        socket.on("choix-du-player1", async (coupP1) => {
+            // if (data.joueur = "player1") {
+            //     socket.to(partie.player2.id).emit("l'autre-a-jouéA", data);
+            // } else {
+            //     socket.to(partie.player1.id).emit("l'autre-a-jouéA", data);
+            // }
+            partie.player1.coup = coupP1;
+            //socket.to(partie.room).emit("l'autre-a-joue", partie);
             console.log("partie renseigné", partie);
             try {
                 const resultat = await verifOntJoue(partie);
-                console.log("resultat de quiAgagne 2");
+                console.log("resultat de quiAgagne 2", resultat);
                 partie.player1.score += resultat[0];
                 partie.player2.score += resultat[1];
                 partie.player1.coup = "";
                 partie.player2.coup = "";
                 await new Promise((resolve, reject) => { 
                     setTimeout(() => {
-                        ioServer.to(partie.room).emit("And-the-winner-is", {partie: partie, message : resultat[2]});
+                        socket.to(partie.room).emit("And-the-winner-is", {partie: partie, message : resultat[2]});
                         resolve();
+                        ioServer.to(partie.player2.id).emit("mise-a-jour-partie", partie);
                     }, 2500);
                 });
                 
             } catch (err) {
-                console.log(err);
+                console.log("fonctionne pas ! ", err);
             }
 
         });
 
-        // socket.on("choixJoueur2", (data) => {
-        //     socket.emit("affiche-choixJoueur2", data);
-        // });
+        socket.on("mise-a-jour-partie", (data) => {
+            partie = data;
+        });
 
-        // socket.emit("event2", "Message envoyé du serveur vers le client");
-
-        // socket.join('le groupe');
-        // ioServer.to('le groupe').emit('un identifiant', 'un message');
+        socket.on("pret", () => {
+            socket.emit("debut-partie", partie);
+        })
 
         //gestion erreur !!!
+        socket.on('error', (err) => {
+            console.log('received error from client:', err);
+        });
 
 
-        socket.on('disconnect', () => {
+        socket.on('disconnect', async() => {
             // faire un message du départ du joueur
-
-            // envoyer score dans BDD
-
-            //sortir Id de la room
-            tabDesRooms.forEach(async(room) => {
-
-                // envoyer les scores dans la BDD
-                await enregistrerScore(partie.player1.pseudo, partie.player1.score);
-                await enregistrerScore(partie.player2.pseudo, partie.player2.score);
-                ioServer.to(partie.room).emit("fuiteDeLAdversaire", "Devant votre perspicacité, votre adversaire a fui !");
-
-                if (partie.player1.id === socket.id) {
-                    partie.player1 = partie.player2;
-                    // partie.player1.id = partie.player2.id;
-                    // partie.player1.pseudo = partie.player1.pseudo;
-                    // partie.player1.score = partie.player2.score;
-                    partie.player2.pseudo = "";
-                    partie.player2.id = "";
-                    partie.player2.score = 0;
-                    partie.player2.coup = "";
-                    socket.to(partie.player2.id).emit("reset", "En attente d'un nouvel adversaire");
-                } else {
-                    partie.player2.pseudo = "";
-                    partie.player2.id = "";
-                    partie.player2.score = 0;
-                    partie.player2.coup = "";
+            // envoyer les scores dans la BDD
+            await enregistrerScore(partie.player1.pseudo, partie.player1.score);
+            await enregistrerScore(partie.player2.pseudo, partie.player2.score);
+            ioServer.to(partie.room).emit("fuiteDeLAdversaire", "Devant votre perspicacité, votre adversaire a fui !");
+            //quitte la room
+            socket.leave(partie.room);
+            // fait le ménage
+            socket.removeAllListeners();
+            //switcher rôle si besoin
+            const indexRoom = parseInt(partie.room.substring(4));
+            console.log("car deconnexion retire de la room ", indexRoom);
+            if (partie.player1.id === socket.id) {
+                partie.player1 = partie.player2;
+                // partie.player1.id = partie.player2.id;
+                // partie.player1.pseudo = partie.player1.pseudo;
+                // partie.player1.score = partie.player2.score;
+                // partie.player2.pseudo = "";
+                // partie.player2.id = "";
+                // partie.player2.score = 0;
+                // partie.player2.coup = "";
+                socket.to(partie.player1.id).emit("reset", "En attente d'un nouvel adversaire");
+                //sortir Id de la room
+                if (typeof indexRoom === Number) {
+                    tabDesRooms[indexRoom].splice(0,1);
                 }
-
-                const indexRoomFinJeu = room.findIndex((elmt) => elmt === socket.id);
-                if (indexRoomFinJeu > -1) {
-                    room.splice(indexRoomFinJeu,1);
-                    console.log(tabDesRooms);
+            } else {
+                if (typeof indexRoom === Number) {
+                    tabDesRooms[indexRoom].pop();
                 }
-            });
+            }
+            partie.player2.pseudo = "";
+            partie.player2.id = "";
+            partie.player2.score = 0;
+            partie.player2.coup = "";
+            console.log(tabDesRooms);
+            
+            // tabDesRooms.forEach((room) => {
+            //     const indexRoomFinJeu = room.findIndex((elmt) => elmt === socket.id);
+            //     if (indexRoomFinJeu > -1) {
+            //         room.splice(indexRoomFinJeu,1);
+            //         console.log(tabDesRooms);
+            //     }
+            // });
             
             console.log("un client s'est déconnecté");
         });

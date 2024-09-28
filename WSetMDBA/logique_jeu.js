@@ -22,6 +22,7 @@ class Partie {  //est appelée par le serveur WS pour instanciation lors de l'ou
 
 function quiAgagne (laPartie) {
     let scoreP1, scoreP2, message;
+    const partie = laPartie;
     const resultat = reglesJeu[partie.player1.coup][partie.player2.coup];
     switch (resultat[0]) {
         case "E":
@@ -32,7 +33,7 @@ function quiAgagne (laPartie) {
             scoreP1 = 0;
             scoreP2 = 1;
             break;
-        case 0:
+        case 1:
             scoreP1 = 0;
             scoreP2 = 1;
             break;

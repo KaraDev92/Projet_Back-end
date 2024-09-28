@@ -227,9 +227,15 @@ section {
     background-position: center;
 }
 
+.bloc-du-message {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    align-content: center;
+}
+
 #espace-message {
     justify-content: flex-start;
-    font-weight: 500;
+    font-weight:600;
     flex-wrap: nowrap;
-
+    align-content: center;
 }

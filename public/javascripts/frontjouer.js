@@ -1,4 +1,4 @@
-"use strict"
+
 
 const socket = io();
 
@@ -41,13 +41,13 @@ socket.on("mise-en-attente", (data) => {
     baliseForm.appendChild(p);
 });
 
-socket.on("demande-info-partieA", (data) => {
-    socket.emit("demande-info-partieR", data);
-});
+// socket.on("demande-info-partieA", (data) => {
+//     socket.emit("demande-info-partieR", data);
+// });
 
-socket.on("retour-info-partieA", (data) => {
-    socket.emit("retour-info-partieR", data);
-});
+// socket.on("retour-info-partieA", (data) => {
+//     socket.emit("retour-info-partieR", data);
+// });
 
 
 socket.on("debut-partie", (data) => {
@@ -61,12 +61,13 @@ socket.on("debut-partie", (data) => {
         baliseEspaceJoueur = document.getElementById('espaceJoueur1');
         baliseEspaceAdversaire = document.getElementById('espaceJoueur2');
         baliseConteneurChoixJoueur = document.getElementById('conteneur1');
+        //le addEventListener a besoin de savoir à quoi correspond la balise au chargement de la page, donc il est ici
         baliseConteneurChoixJoueur.addEventListener('click', (event) => {
             coupJoue = event.target.id;
-            console.log(`choix ${joueur} `,coupJoue);
-            socket.emit("choix-du-joueur", {joueur: joueur, coupJoue: coupJoue});
             baliseEspaceJoueur.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
             baliseEspaceJoueur.classList.add(coupJoue);
+            console.log(`choix ${joueur} `,coupJoue);
+            socket.emit("choix-du-player1", coupJoue);
         });
     } else {
         joueur = "player2"; 
@@ -76,12 +77,13 @@ socket.on("debut-partie", (data) => {
         baliseEspaceJoueur = document.getElementById('espaceJoueur2');
         baliseEspaceAdversaire = document.getElementById('espaceJoueur1');
         baliseConteneurChoixJoueur = document.getElementById('conteneur2');
+        //le addEventListener a besoin de savoir à quoi correspond la balise au chargement de la page, donc il est ici aussi !
         baliseConteneurChoixJoueur.addEventListener('click', (event) => {
             coupJoue = event.target.id;
-            console.log(`choix ${joueur} `,coupJoue);
-            socket.emit("choix-du-joueur", {joueur: joueur, coupJoue: coupJoue});
             baliseEspaceJoueur.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
             baliseEspaceJoueur.classList.add(coupJoue);
+            console.log(`choix ${joueur} `,coupJoue);
+            socket.emit("choix-du-player2", coupJoue);
         });
     }
     baliseMessage.innerText = "À vous de jouer !";
@@ -95,21 +97,18 @@ socket.on("debut-partie", (data) => {
     //
 });
 
-// baliseConteneurChoixJoueur.addEventListener('click', (event) => {
-//     coupJoue = event.target.id;
-//     console.log(`choix ${joueur} `,coupJoue);
-//     socket.emit("choix du joueur", {joueur: joueur, coupeJoue: coupJoue});
-//     baliseEspaceJoueur.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
-//     baliseEspaceJoueur.classList.add(coupJoue);
-// });
 
 // socket.on("affiche-choixJoueur2", (data) => {
 //     baliseEspaceJoueur2.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
 //     baliseEspaceJoueur2.classList.add(data);
 // });
-socket.on("l'autre-a-jouéA", (data) => {
-    socket.emit("l'autre-a-jouéA", data);
-});
+// socket.on("l'autre-a-jouéA", (data) => {
+//     socket.emit("l'autre-a-jouéR", data);
+// });
+// socket.on("l'autre-a-joue", (data) => {
+//     socket.emit("l'autre-a-jouéR", data);
+// });
+
 
 socket.on("Ont-joue", (data) => {
     partie = data;
@@ -121,13 +120,19 @@ socket.on("Ont-joue", (data) => {
     }
 });
 
-socket.on("And-the-winner-is", (data) => {
+socket.on("And-the-winner-is", async (data) => {
     partie = data.partie;
     baliseScoreJoueur1.innerText = partie.player1.score;
     baliseScoreJoueur2.innerText = partie.player2.score;
     baliseMessage.innerText = data.message;
     //baliseEspaceAdversaire.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
     //baliseEspaceJoueur.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
+    await new Promise((resolve, reject) => { 
+        setTimeout(() => {
+            socket.emit("pret");
+            resolve();
+        }, 2500);
+    });
 })
 
 
