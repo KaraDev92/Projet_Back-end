@@ -1,5 +1,6 @@
 
 
+// eslint-disable-next-line no-undef
 const socket = io();
 
 const baliseForm = window.document.getElementById('formulaire');
@@ -113,7 +114,7 @@ socket.on("debut-partie", (data) => {
 socket.on("Ont-joue", (data) => {
     partie = data;
     baliseMessage.innerText = "Les jeux sont faits !"
-    if (joueur = "player1") {
+    if (joueur === "player1") {
         baliseEspaceAdversaire.classList.add(partie.player2.coup);
     } else {
         baliseEspaceAdversaire.classList.add(partie.player1.coup);
@@ -127,20 +128,24 @@ socket.on("And-the-winner-is", async (data) => {
     baliseMessage.innerText = data.message;
     //baliseEspaceAdversaire.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
     //baliseEspaceJoueur.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
-    await new Promise((resolve, reject) => { 
+    await new Promise((resolve) => { 
         setTimeout(() => {
             socket.emit("pret");
             resolve();
         }, 2500);
     });
-})
+});
+
+socket.on("fuiteDeLAdversaire", (message) => {
+    baliseMessage.innerText = message;
+});
 
 
 
 socket.on("reset", (message) => {
-    baliseJoueur.style.display = none;
-    baliseAdversaire.style.display = none;
-    baliseConteneurChoixJoueur.style.display = none;
-    //afficher message
+    baliseJoueur.style.display = "none";
+    baliseAdversaire.style.display = "none";
+    baliseConteneurChoixJoueur.style.display = "none";
+    baliseMessage.innerText = message;
 })
 

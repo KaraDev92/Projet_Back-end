@@ -2,6 +2,7 @@
 
 const { MongoClient, ServerApiVersion } = require("mongodb");
 require('dotenv').config();
+// eslint-disable-next-line no-undef
 const uri = process.env.MONGODB_CONNECTION_STRING;
 const client = new MongoClient(uri, {
     serverApi: {

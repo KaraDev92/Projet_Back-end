@@ -83,7 +83,7 @@ const connectionWS = async function (httpServer) {
 
         socket.on("demande-info-partie-a-player1", (infoJoueur2) => {
             console.log("demande-info-partie-a-player1 reçue");
-            if (socket.id = partie.player1.id) {
+            if (socket.id === partie.player1.id) {
                 console.log("demande-info-partie reçue");
                 partie.player2.id = infoJoueur2.id;
                 partie.player2.pseudo = infoJoueur2.pseudo;
@@ -93,7 +93,7 @@ const connectionWS = async function (httpServer) {
         });
 
         socket.on("retour-info-partie-a-player2", (laPartie) => {
-            if (socket.id = partie.player2.id) {
+            if (socket.id === partie.player2.id) {
             partie = laPartie;
             ioServer.to(partie.room).emit("debut-partie", partie); // à compléter
             }
@@ -129,7 +129,7 @@ const connectionWS = async function (httpServer) {
                 partie.player2.score += resultat[1];
                 partie.player1.coup = "";
                 partie.player2.coup = "";
-                await new Promise((resolve, reject) => { 
+                await new Promise((resolve) => { 
                     setTimeout(() => {
                         socket.to(partie.room).emit("And-the-winner-is", {partie: partie, message : resultat[2]});
                         resolve();
@@ -158,7 +158,6 @@ const connectionWS = async function (httpServer) {
 
 
         socket.on('disconnect', async() => {
-            // faire un message du départ du joueur
             // envoyer les scores dans la BDD
             await enregistrerScore(partie.player1.pseudo, partie.player1.score);
             await enregistrerScore(partie.player2.pseudo, partie.player2.score);

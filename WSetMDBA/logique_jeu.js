@@ -1,6 +1,7 @@
 "use strict"
 
-const { reglesJeu, phrasesJeu } = require("../variables");
+ 
+const { reglesJeu } = require("../variables");
 
 class Partie {  //est appelée par le serveur WS pour instanciation lors de l'ouverture d'une nouvelle room
     constructor() {
