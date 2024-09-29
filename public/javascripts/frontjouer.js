@@ -1,4 +1,4 @@
-
+"use strict"
 
 // eslint-disable-next-line no-undef
 const socket = io();
@@ -6,12 +6,9 @@ const socket = io();
 const baliseForm = window.document.getElementById('formulaire');
 let baliseJoueur = null;
 let baliseAdversaire = null;
-//const baliseJoueur2 = window.document.getElementById('joueur2');
 let baliseConteneurChoixJoueur = null;
-//const baliseConteneurChoixJoueur = window.document.getElementById('conteneur1');
 let baliseEspaceJoueur = null;
 let baliseEspaceAdversaire = null;
-//const baliseEspaceJoueur2 = window.document.getElementById('espaceJoueur2');
 const baliseScoreJoueur1 = document.querySelector("#scoreJoueur1 span");
 const baliseScoreJoueur2 = document.querySelector("#scoreJoueur2 span");
 const baliseMessage = document.getElementById('espace-message');
@@ -28,7 +25,6 @@ baliseForm.addEventListener('submit', (event) => {
     socket.emit('identifier',message);
 });
 
-
 socket.on("histoireDePseudo", (data) => {
     let p = document.createElement("p");
     p.innerHTML = data;
@@ -41,15 +37,6 @@ socket.on("mise-en-attente", (data) => {
     p.innerHTML = data;
     baliseForm.appendChild(p);
 });
-
-// socket.on("demande-info-partieA", (data) => {
-//     socket.emit("demande-info-partieR", data);
-// });
-
-// socket.on("retour-info-partieA", (data) => {
-//     socket.emit("retour-info-partieR", data);
-// });
-
 
 socket.on("debut-partie", (data) => {
     document.querySelector("#identification").style.display = "none";
@@ -87,7 +74,7 @@ socket.on("debut-partie", (data) => {
             socket.emit("choix-du-player2", coupJoue);
         });
     }
-    baliseMessage.innerText = "À vous de jouer !";
+    baliseMessage.textContent = "Vous avez 10s. pour jouer !";
     baliseJoueur.style.display = "flex";
     baliseAdversaire.style.display = "flex";
     baliseConteneurChoixJoueur.style.display = "grid";
@@ -95,25 +82,28 @@ socket.on("debut-partie", (data) => {
     document.querySelector("#idJoueur2 span").textContent = partie.player2.pseudo;
     baliseScoreJoueur1.textContent = partie.player1.score;
     baliseScoreJoueur2.textContent = partie.player2.score;
-    //
 });
 
-
-// socket.on("affiche-choixJoueur2", (data) => {
-//     baliseEspaceJoueur2.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
-//     baliseEspaceJoueur2.classList.add(data);
-// });
-// socket.on("l'autre-a-jouéA", (data) => {
-//     socket.emit("l'autre-a-jouéR", data);
-// });
-// socket.on("l'autre-a-joue", (data) => {
-//     socket.emit("l'autre-a-jouéR", data);
-// });
-
+socket.on("Pas-joue", async () => {
+    try {
+        baliseMessage.textContent = "Temps dépassé !"
+        // eslint-disable-next-line no-unused-vars
+        await new Promise((resolve, reject) => { 
+            setTimeout(() => {
+                socket.emit("pret");
+                baliseEspaceAdversaire.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
+                baliseEspaceJoueur.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
+                resolve();
+            }, 2500);
+        });
+    } catch (error) { 
+        console.log("problème de setTimeout !", error);
+    }
+});
 
 socket.on("Ont-joue", (data) => {
     partie = data;
-    baliseMessage.innerText = "Les jeux sont faits !"
+    baliseMessage.textContent = "Les jeux sont faits !"
     if (joueur === "player1") {
         baliseEspaceAdversaire.classList.add(partie.player2.coup);
     } else {
@@ -122,30 +112,38 @@ socket.on("Ont-joue", (data) => {
 });
 
 socket.on("And-the-winner-is", async (data) => {
-    partie = data.partie;
-    baliseScoreJoueur1.innerText = partie.player1.score;
-    baliseScoreJoueur2.innerText = partie.player2.score;
-    baliseMessage.innerText = data.message;
-    //baliseEspaceAdversaire.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
-    //baliseEspaceJoueur.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
-    await new Promise((resolve) => { 
-        setTimeout(() => {
-            socket.emit("pret");
-            resolve();
-        }, 2500);
-    });
+    try {
+        partie = data.partie;
+        baliseScoreJoueur1.innerText = partie.player1.score;
+        baliseScoreJoueur2.innerText = partie.player2.score;
+        baliseMessage.textContent = data.message;
+    
+        // eslint-disable-next-line no-unused-vars
+        await new Promise((resolve, reject) => { 
+            setTimeout(() => {
+                socket.emit("pret");
+                baliseEspaceAdversaire.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
+                baliseEspaceJoueur.classList.remove('pierre', 'papier', 'ciseaux', 'spock', 'lezard');
+                resolve();
+            }, 2500);
+        });
+    } catch (error) {
+        console.log("problème de setTimeout !", error);
+    }
 });
 
 socket.on("fuiteDeLAdversaire", (message) => {
-    baliseMessage.innerText = message;
+    baliseMessage.textContent = message;
 });
 
-
+socket.on("Jeu-en-panne", () => {
+    baliseMessage.textContent = "Nous rencontrons un problème, merci de revenir ultérieurement.";
+});
 
 socket.on("reset", (message) => {
     baliseJoueur.style.display = "none";
     baliseAdversaire.style.display = "none";
     baliseConteneurChoixJoueur.style.display = "none";
-    baliseMessage.innerText = message;
+    baliseMessage.textContent = message;
 })
 

@@ -86,7 +86,7 @@ caption {
     margin-top: 1rem;
 }
 td { 
-    border: 1px solid black; 
+    border: 1px solid var(--banniere);
     padding: 0 0.8rem;
 }
 
@@ -95,16 +95,19 @@ table {
     margin: auto;
 }
 
-#encadre {
-    border: 2px dashed var(--txt);
-    /*border-image: url("../images/cadre1.png") 30 repeat;*/
-    border-image: repeating-linear-gradient(30deg, #4d9f0c, #9198e5, #4d9f0c 20px) 60;
-}
-
 footer {
     font-family: "Baloo Bhaina 2", sans-serif;
     background-color: var(--banniere);
     color: var(--txt-voyant);
+}
+footer ul {
+    column-count: 2;
+    column-rule: solid 0.05rem var(--fond);
+    column-gap: 1rem;
+    list-style-position: inside;
+}
+footer a {
+    text-decoration: none;
 }
 
 section {
@@ -123,6 +126,7 @@ section {
     width: 24%;
     justify-content: flex-start;
     font-size: 1.1rem;
+    font-weight: 600;
     flex-wrap: nowrap;
 }
 #joueur2 {
@@ -199,8 +203,8 @@ section {
     width: 50%;
     height : 20rem;
     background: linear-gradient(to bottom right, var(--fond-grille), var(--banniere));
-    border-image: url("../images/cadre2.png") 30 repeat;
-    border: 2px dashed var(--txt);
+    border: 1px solid var(--banniere);
+    border-radius: 5px;
     position: relative;
     z-index: 2;
 }
@@ -228,14 +232,9 @@ section {
 }
 
 .bloc-du-message {
-    justify-content: flex-start;
+    font-weight:700;
     flex-wrap: nowrap;
-    align-content: center;
-}
-
-#espace-message {
-    justify-content: flex-start;
-    font-weight:600;
-    flex-wrap: nowrap;
-    align-content: center;
+    justify-content: center;
+    height: 2.5rem;
+    width: 100%;
 }

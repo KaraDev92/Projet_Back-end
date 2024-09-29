@@ -26,7 +26,6 @@ async function chercherLeaderboard() {
       console.log('chercher leaderboard :', error);
       return [{pseudo: '---', score: '---'}];
     } finally {
-      // Ensures that the client will close when you finish/error
       await client.close();
     }
   };
@@ -48,16 +47,14 @@ const chercherJoueur = async function (nom) {
         }
     } catch (error){
         console.log('chercher joueur BDD : ', error);
+        return false
     } finally {
-        // Ensures that the client will close when you finish/error
         await client.close();
     }
 };
 
 
 const purgerBDDdesZero = async function() {
-   // const client = new MongoClient(uri); 
-    //la connexion se fait à la création de la variable donc besoin de la mettre dans la fonction c'est à dire quand on utilise vraiment la connection
     try {
         await client.connect();
         const database = client.db('projet_back-end');
@@ -67,7 +64,6 @@ const purgerBDDdesZero = async function() {
     } catch (error){
         console.log('purger les 0 :', error);
     } finally {
-        // Ensures that the client will close when you finish/error
         await client.close();
     }
 }
@@ -81,7 +77,6 @@ const enregistrerScore = async function (pseudo, score) {
     } catch (error){
         console.log('enregistrer score :', error);
     } finally {
-        // Ensures that the client will close when you finish/error
         await client.close();
     }
 };

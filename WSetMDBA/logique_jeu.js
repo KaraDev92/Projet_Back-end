@@ -35,8 +35,8 @@ function quiAgagne (laPartie) {
             scoreP2 = 1;
             break;
         case 1:
-            scoreP1 = 0;
-            scoreP2 = 1;
+            scoreP1 = 1;
+            scoreP2 = 0;
             break;
     }
     message = resultat[1];

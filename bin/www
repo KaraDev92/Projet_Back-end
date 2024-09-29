@@ -79,7 +79,7 @@ function onError(error) {
     default:
       throw error;
   }
-};
+}
 
 /**
  * Event listener for HTTP server "listening" event.
@@ -91,7 +91,7 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-};
+}
 
 /* connection au serveur websocket */
 const connectionWS = require('../WSetMDBA/serveurWS');
