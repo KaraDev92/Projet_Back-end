@@ -15,12 +15,20 @@
     --fond-grille: #CD6688;
 } */
 
-:root {
+/* :root {
     --fond: #180161;
     --banniere:#4F1787;
     --txt-voyant: #FB773C;
     --txt: black;
     --fond-grille: #EB3678;
+} */
+
+:root {
+    --fond: #87A2FF;
+    --banniere:#C4D7FF;
+    --txt-voyant: #fac7b0;
+    --txt: black;
+    --fond-grille: #FFF4B5;
 }
 
 body {
@@ -98,7 +106,7 @@ table {
 footer {
     font-family: "Baloo Bhaina 2", sans-serif;
     background-color: var(--banniere);
-    color: var(--txt-voyant);
+    color: var(--fond);
 }
 footer ul {
     column-count: 2;

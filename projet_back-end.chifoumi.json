@@ -1,0 +1,49 @@
+[{
+  "_id": {
+    "$oid": "66f02d9bc2beb6658bdde92f"
+  },
+  "pseudo": "Sheldon",
+  "score": 149
+},
+{
+  "_id": {
+    "$oid": "66f02e24c2beb6658bdde930"
+  },
+  "pseudo": "Leonard",
+  "score": 103
+},
+{
+  "_id": {
+    "$oid": "66f02e83c2beb6658bdde932"
+  },
+  "pseudo": "Penny",
+  "score": 28
+},
+{
+  "_id": {
+    "$oid": "66f02eadc2beb6658bdde933"
+  },
+  "pseudo": "Howard",
+  "score": 114
+},
+{
+  "_id": {
+    "$oid": "66f02ee5c2beb6658bdde934"
+  },
+  "pseudo": "Bernadette",
+  "score": 136
+},
+{
+  "_id": {
+    "$oid": "66f02f2cc2beb6658bdde935"
+  },
+  "pseudo": "Amy",
+  "score": 109
+},
+{
+  "_id": {
+    "$oid": "66f02f4fc2beb6658bdde936"
+  },
+  "pseudo": "Stuart",
+  "score": 35
+}]
