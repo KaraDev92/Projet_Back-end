@@ -1,4 +1,10 @@
+/** Module router
+ * @module jouerRouter
+ */
+
 const express = require('express');
+
+/** @constant {Router} router */
 const router = express.Router();
 
 /* GET jouer listing. */
