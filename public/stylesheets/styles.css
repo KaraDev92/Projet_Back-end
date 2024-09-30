@@ -68,9 +68,14 @@ main {
     align-content: center;
     margin: 1rem;
 }
-main p, main ul {
+h2 {
+    margin: 1rem;
+}
+#index {
+    flex-direction: column;
     line-height: 130%;
 }
+
 ul li {
     margin-left: 1.2rem;
 }
@@ -82,7 +87,7 @@ caption {
 }
 td { 
     border: 1px solid var(--banniere);
-    padding: 0 0.8rem;
+    padding: 0.8rem;
 }
 
 table { 
